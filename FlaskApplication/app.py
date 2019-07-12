@@ -1,15 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+import scrapper
 
 app = Flask("My Application")
-
-# Create a json file of articles
-# with following fields
-# {
-#   "slug": "",
-#   "authors": "",
-#   "title": "",
-#   "body": ""
-# }
 
 USERS = [
   {
@@ -26,9 +18,14 @@ USERS = [
   }
 ]
 
-@app.route('/')
-def index():
-  return "Hello World !"
+@app.route('/', methods=['GET', 'POST'])
+def something():
+  products = []
+  if request.method == "POST":
+    query = request.form['query']
+    products = scrapper.scrap(query)
+
+  return render_template('index.html', products=products)
 
 @app.route('/users')
 def users():
